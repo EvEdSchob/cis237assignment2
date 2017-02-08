@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Evan Schober
+//Class accepts the maze and start position then calls mazeTraversal()
+//mazeTraversal calls itself to move through the maze.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +9,6 @@ using System.Threading.Tasks;
 
 namespace cis237assignment2
 {
-    //This class is used for solving a char array maze.
-    //You might want to add other methods to help you out.
-    //A print maze method would be very useful, and probably neccessary to print the solution.
-    //If you are real ambitious, you could make a seperate class to handle that.
     class MazeSolver
     {
         //Class level memeber variable for the mazesolver class
@@ -18,15 +17,14 @@ namespace cis237assignment2
         int yStart;
         int width;
         int height;
+        bool solved;
 
         //Default Constuctor to setup a new maze solver.
         public MazeSolver()
         {}
 
 
-        //This is the public method that will allow someone to use this class to solve the maze.
-        //Feel free to change the return type, or add more parameters if you like, but it can be done
-        //exactly as it is here without adding anything other than code in the body.
+        //Public method that allows outside classes to run the maze solving algorithm.
         public void SolveMaze(char[,] maze, int xStart, int yStart)
         {
 
@@ -40,19 +38,58 @@ namespace cis237assignment2
             width = maze.GetLength(0);
             height = maze.GetLength(1);
 
-            //Do work needed to use mazeTraversal recursive call and solve the maze.
+            solved = false;
+
+            //Calls mazeTraversal for the first time with the starting parameters.
             mazeTraversal(maze, xStart, yStart);
         }
 
-        //This should be the recursive method that gets called to solve the maze.
-        //Feel free to change the return type if you like, or pass in parameters that you might need.
-        //This is only a very small starting point.
+
+        //Maze Traversal 
         private void mazeTraversal(char[,] maze, int xPos, int yPos)
         {
+            //Third Attempt
+            //Completes maze and exits when solved.
+            maze[xPos, yPos] = 'X';
+            printMaze();
+            if (0 < xPos && xPos < width - 1 && 0 < yPos && yPos < height - 1)
+            {
+                //Move Right
+                if (!solved && maze[xPos + 1, yPos] == '.')
+                {
+                    mazeTraversal(maze, xPos + 1, yPos);
+                }
+                //Move Down
+                if (!solved && maze[xPos, yPos + 1] == '.')
+                {
+                    mazeTraversal(maze, xPos, yPos + 1);
+                }
+                //Move Left
+                if (!solved && maze[xPos - 1, yPos] == '.')
+                {
+                    mazeTraversal(maze, xPos - 1, yPos);
+                }
+                //Move Up
+                if (!solved && maze[xPos, yPos - 1] == '.')
+                {
+                    mazeTraversal(maze, xPos, yPos - 1);
+                }
+                //Step Back
+                if (!solved)
+                {
+                    maze[xPos, yPos] = 'O';
+                    printMaze();
+                }
+                    
+            }
+            else
+            {
+                solved = true;
+            }
 
-            ////First Attempt
-            ////Solves maze but cannot exit recrusive call. Goes outside the bounds of the array.
-            //if ( 0 < xPos && xPos < width && 0 < yPos && yPos < height )
+            //First Attempt
+            //Solves maze but cannot exit recrusive call. Goes outside the bounds of the array.
+            //if (0 < xPos && xPos < width - 1 && 0 < yPos && yPos < height - 1)
             //{
             //    maze[xPos, yPos] = 'X';
             //    printMaze();
@@ -84,35 +121,33 @@ namespace cis237assignment2
             //    printMaze();
             //}
 
-            //Implement maze traversal recursive call
-
             //Second attempt
-            //Also solves maze but is unable to return
-            if (maze[xPos, yPos] == '.')
-            {
-                maze[xPos, yPos] = 'x';
-                printMaze();
-                if(0 < xPos && xPos < width && 0 < yPos && yPos < height)
-                {
-                    //Right
-                    mazeTraversal(maze, xPos + 1, yPos);
-                    //Down
-                    mazeTraversal(maze, xPos, yPos + 1);
-                    //Left
-                    mazeTraversal(maze, xPos - 1, yPos);
-                    //Up
-                    mazeTraversal(maze, xPos, yPos - 1);
-                    //Back Up
-                    maze[xPos, yPos] = 'O';
-                }
-            }
-
-            //Third Attempt
+            //Also solves maze but does not stop once the wall is reached.
+            //if (maze[xPos, yPos] == '.')
+            //{
+            //    maze[xPos, yPos] = 'x';
+            //    printMaze();
+            //    if (0 < xPos && xPos < width - 1 && 0 < yPos && yPos < height - 1)
+            //    {
+            //        //Right
+            //        mazeTraversal(maze, xPos + 1, yPos);
+            //        //Down
+            //        mazeTraversal(maze, xPos, yPos + 1);
+            //        //Left
+            //        mazeTraversal(maze, xPos - 1, yPos);
+            //        //Up
+            //        mazeTraversal(maze, xPos, yPos - 1);
+            //        //Back Up
+            //        maze[xPos, yPos] = 'O';
+            //        printMaze();
+            //    }
+            //}
         }
 
         private void printMaze()
         {
-            //Print the maze
+            //Prints the maze
+            Console.Clear();
             int x = 0;
             int y;
             for (y = 0; y < height; y++)
@@ -125,6 +160,7 @@ namespace cis237assignment2
                 }
             }
             Console.WriteLine(Environment.NewLine + Environment.NewLine);
+            System.Threading.Thread.Sleep(150);
         }
     }
 }
