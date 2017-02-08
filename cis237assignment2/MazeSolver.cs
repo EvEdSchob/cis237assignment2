@@ -147,20 +147,21 @@ namespace cis237assignment2
         private void printMaze()
         {
             //Prints the maze
-            Console.Clear();
             int x = 0;
             int y;
+            string outputString = "";
             for (y = 0; y < height; y++)
             {
                 if (x == width)
-                    Console.Write(Environment.NewLine);
+                    outputString += Environment.NewLine;
                 for (x = 0; x < width; x++)
                 {
-                    Console.Write(maze[x, y] + " ");
+                    outputString += maze[x, y] + " ";
                 }
             }
-            Console.WriteLine(Environment.NewLine + Environment.NewLine);
-            System.Threading.Thread.Sleep(150);
+            Console.Clear();
+            Console.WriteLine(outputString);
+            System.Threading.Thread.Sleep(100);
         }
     }
 }
